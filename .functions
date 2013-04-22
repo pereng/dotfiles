@@ -180,8 +180,8 @@ EOF
 }
 
 # Add reminder to Reminders.app (OS X 10.8)
-# Usage: `remind 'foo'` or `echo 'foo' | remind`
-function remind() {
+# Usage: `todo 'foo'` or `echo 'foo' | todo`
+function todo() {
 	local text
 	if [ -t 0 ]; then
 		text="$1" # argument
@@ -202,4 +202,17 @@ function unquarantine() {
 	for attribute in com.apple.metadata:kMDItemDownloadedDate com.apple.metadata:kMDItemWhereFroms com.apple.quarantine; do
 		xattr -r -d "$attribute" "$@"
 	done
+}
+
+# Search in current directory and all subdirectories for files containing arg
+# and print relative path and linenumber.
+# Usage: `search 'foo'` or `echo 'foo' | search`
+function search() {
+	local text
+	if [ -t 0 ]; then
+		text="$1" # argument
+	else
+		text=$(cat) # pipe
+	fi
+	find . -type f -exec grep -Hn "$text" {} \; -print
 }
